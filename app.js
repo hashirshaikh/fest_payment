@@ -17,7 +17,7 @@ const db_path = MONGODB_URI;
 
 
 
-
+app.use(express.json());
 app.use(express.urlencoded());
 
 app.use(express.static(path.join(rootDir, 'public')))

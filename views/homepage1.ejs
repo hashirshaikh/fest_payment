@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Samgatha X Vashist - Fest Booking</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #001e33, #88c4ff);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .navbar {
+        background: #181818;
+      }
+      .navbar-brand {
+        color: white !important;
+        font-weight: bold;
+        white-space: normal !important; /* Allow wrapping */
+        word-break: break-word;
+      }
+      .alert-offer {
+        background-color: #ffc107;
+        color: #000;
+        font-weight: bold;
+        animation: blink 2s infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0.9;
+        }
+      }
+      .fest-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        text-align: center;
+      }
+      .btn-custom {
+        background: #0d6efd;
+        color: white;
+        border-radius: 50px;
+        padding: 10px 25px;
+        font-size: 18px;
+        transition: 0.3s;
+      }
+      .btn-custom:hover {
+        background: #0b5ed7;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand text-wrap" href="#">
+          <img
+            src="/images/logo.png"
+            alt=""
+            width="40"
+            height="40"
+            class="d-inline-block align-text-top me-2"
+          />
+          IIITDM Kancheepuram - Samgatha X Vashist
+        </a>
+      </div>
+    </nav>
+
+    <!-- Scrolling Offer Alert -->
+    <marquee class="alert-offer p-2">
+      🎉 Exciting Combo Offers Available! Book in Groups & Save More 🎉
+    </marquee>
+
+    <!-- Main Section -->
+    <div class="container my-5">
+      <div class="fest-card">
+        <h1 class="mb-3">SAMGATHA X VASHISHT</h1>
+        <p class="lead">
+          Get ready for an unforgettable cultural & technical fest at
+          <b>IIITDM Kancheepuram</b>!
+        </p>
+        <hr />
+        <h3>Ticket Price: <span class="text-success">₹300 per person</span></h3>
+        <p class="text-muted">Limited tickets available – hurry up!</p>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-center gap-3 mt-4">
+          <button
+            class="btn btn-custom"
+            onclick="window.location.href='BOOKING'"
+          >
+            🎟️ Book Tickets
+          </button>
+          <button
+            class="btn btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#comboModal"
+          >
+            💡 View Combo Offers
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Combo Offers Modal -->
+    <div
+      class="modal fade"
+      id="comboModal"
+      tabindex="-1"
+      aria-labelledby="comboModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title" id="comboModalLabel">🎉 Combo Offers</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul class="list-group">
+              <li class="list-group-item">
+                👫 Book for <b>5 People</b> – Get <b>20% Off</b>
+              </li>
+              <li class="list-group-item">
+                👨‍👩‍👧‍👦 Book for <b>8 People</b> – Get <b>30% Off</b>
+              </li>
+              <li class="list-group-item">
+                🎊 Book for <b>10 People</b> – Get <b>40% Off</b>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+            >
+              Got It!
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Book your Tickets!!!</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f8f9fa;
+      }
+      .navbar {
+        background: linear-gradient(90deg, #020744, #67c8f5);
+      }
+      .navbar-brand {
+        color: white !important;
+        font-weight: bold;
+        white-space: normal !important; /* Allow wrapping */
+        word-break: break-word;
+      }
+      .btn-primary {
+        background-color: #020744;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #67c8f5;
+      }
+      .card {
+        border-radius: 15px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-dark">
+      <div class="container">
+        <a class="navbar-brand text-wrap" href="#">
+          <img
+            src="/images/logo.png"
+            alt=""
+            width="40"
+            height="40"
+            class="d-inline-block align-text-top me-2"
+          />
+          IIITDM Kancheepuram - Samgatha X Vashist
+        </a>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="card p-4">
+        <h3 class="mb-3 text-center fw-bold">Book Your Tickets !!</h3>
+        <!-- ...existing code... -->
+        <form action="/payment" method="POST">
+          <div class="mb-3">
+            <label
+              for="numTickets"
+              class="form-label"
+              value="<%- formData.Numoftickets %>"
+              >Number of Tickets</label
+            >
+            <select
+              id="numTickets"
+              name="numTickets"
+              class="form-select"
+              required
+            >
+              <option value="1" selected>1</option>
+              <option value="5">5</option>
+              <option value="8">8</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <div id="personFields"></div>
+          <div class="mb-3">
+            <label class="form-label"
+              >Email (Payment Receipt will be sent on this email)</label
+            >
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              placeholder="Enter email"
+              value="<%- formData.Email %>"
+              required
+            />
+            <input
+              type="hidden"
+              name="order_id"
+              value="<%= formData.razorpay_order_id %>"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">
+            Proceed to Pay
+          </button>
+        </form>
+        <script>
+          const Name = "<%- formData.Name %>".split(",");
+          const RollNo = "<%- formData.RollNo %>".split(",");
+
+          const numTickets = document.getElementById("numTickets");
+          const personFields = document.getElementById("personFields");
+          document.getElementById("numTickets").value =
+            "<%- formData.Numoftickets %>";
+          function updatePersonFields() {
+            const count = parseInt(numTickets.value, 10);
+            personFields.innerHTML = "";
+            for (let i = 1; i <= count; i++) {
+              if (Name[i - 1] === undefined) Name[i - 1] = "";
+              if (RollNo[i - 1] === undefined) RollNo[i - 1] = "";
+              personFields.innerHTML += `
+                <div class="mb-3">
+                  <label class="form-label">Enter the name of ${i}${getOrdinal(
+                i
+              )} person</label>
+                  <input type="text" class="form-control" name="name${i}" placeholder="Name of ${i}${getOrdinal(
+                i
+              )} person" value="${Name[i - 1]}" required>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Enter the roll number of ${i}${getOrdinal(
+                i
+              )} person</label>
+                  <input type="text" class="form-control" name="roll${i}" placeholder="Roll number of ${i}${getOrdinal(
+                i
+              )} person" value="${RollNo[i - 1]}" required>
+                </div>
+              `;
+            }
+          }
+
+          function getOrdinal(n) {
+            if (n === 1) return "st";
+            if (n === 2) return "nd";
+            if (n === 3) return "rd";
+            return "th";
+          }
+
+          numTickets.addEventListener("change", updatePersonFields);
+
+          // Initialize fields on page load
+          updatePersonFields();
+        </script>
+        <!-- ...existing code... -->
+      </div>
+    </div>
+  </body>
+</html>

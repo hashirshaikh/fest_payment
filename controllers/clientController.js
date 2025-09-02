@@ -6,6 +6,8 @@ const nodemailer = require("nodemailer");
 const { PassThrough } = require("stream");
 
 const Data = require("../models/data");
+const myemail = process.env.EMAIL;
+const appPassword = process.env.APP_PASSWORD;
 
 homePage = (req, res, next) => {
   res.render("homepage1");
@@ -64,12 +66,12 @@ download = async (req, res, next) => {
         const transporter = nodemailer.createTransport({
           service: "gmail",
           auth: {
-            user: "hashirshaikh145@gmail.com",
-            pass: "xnha sxfe nnqy rvhr",
+            user: myemail,
+            pass: appPassword,
           },
         });
         await transporter.sendMail({
-          from: "hashirshaikh145@gmail.com",
+          from: myemail,
           to: `${saveData.Email}`,
           subject: "Payment Slip",
           text: "Please find your payment slip attached below for the fest ticket booking.",

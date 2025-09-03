@@ -20,6 +20,7 @@ bookTicket = async (req, res, next) => {
     iden = req.body["order_id"];
   } catch (err) {
     iden = null;
+    console.log(err);
   }
   console.log("Identifier received:", iden);
   let formData;

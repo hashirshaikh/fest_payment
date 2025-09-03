@@ -26,6 +26,7 @@ bookTicket = async (req, res, next) => {
   if (iden) {
     // Find the latest booking for this email
     formData = await Data.findOne({ razorpay_order_id: iden });
+    console.log("Form Data:", formData);
   } else {
     formData = {
       razorpay_order_id: "",
@@ -293,6 +294,7 @@ createOrder = async (req, res, next) => {
 
 // Step 2: Razorpay Webhook -> Verify payment
 webhookHandler = async (req, res) => {
+  console.log("Webhook received:", req.body);
   // 1. Verify webhook signature
   const shasum = crypto.createHmac("sha256", WEBHOOK_SECRET);
   shasum.update(JSON.stringify(req.body));

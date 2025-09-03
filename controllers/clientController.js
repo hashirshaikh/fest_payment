@@ -201,7 +201,7 @@ createOrder = async (req, res, next) => {
       } else if (numTickets == 10) {
         totalAmount = 1800;
       }
-      sData.Date = new Date().toString();
+      sData.Date = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }).toString();
       sData.amount = totalAmount;
       await sData.save();
 
@@ -225,7 +225,7 @@ createOrder = async (req, res, next) => {
       rollNos.push(req.body[`roll${i}`]);
     }
 
-    const now = new Date();
+    const now = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
     const date = now.toString();
 
     let totalAmount = 0;
@@ -243,7 +243,7 @@ createOrder = async (req, res, next) => {
       .create({
         amount: totalAmount * 100,
         currency: "INR",
-        receipt: Date.now().toString(),
+        receipt: Date.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }).toString(),
       })
       .catch((err) => {
         console.log("Razorpay Order Creation Error:", err);
@@ -269,9 +269,6 @@ createOrder = async (req, res, next) => {
 
     await lData
       .save()
-      .then(() => {
-        console.log("Data Saved");
-      })
       .catch((err) => {
         console.log(err);
       });

@@ -1,5 +1,5 @@
 // here you will import data/db js files and using it you will implement the client functions here
-const { razorpay, WEBHOOK_SECRET } = require("../config/razorpay");
+const { razorpay,  webhook_secret } = require("../config/razorpay");
 const crypto = require("crypto");
 const PDFDocument = require("pdfkit");
 const nodemailer = require("nodemailer");
@@ -297,7 +297,7 @@ createOrder = async (req, res, next) => {
 webhookHandler = async (req, res) => {
   console.log("Webhook received:", req.body);
   // 1. Verify webhook signature
-  const shasum = crypto.createHmac("sha256", WEBHOOK_SECRET);
+  const shasum = crypto.createHmac("sha256", webhook_secret);
   shasum.update(JSON.stringify(req.body));
   const digest = shasum.digest("hex");
 

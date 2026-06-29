@@ -63,7 +63,9 @@ download = async (req, res, next) => {
 
         // Send email with PDF attachment
         const transporter = nodemailer.createTransport({
-          service: "gmail",
+            host: "smtp.gmail.com",
+            port: 587,
+           secure: false,
           auth: {
             user: myemail,
             pass: appPassword,

@@ -5,7 +5,7 @@ const clientRouter = require('./routes/clientRouter')
 const rootDir = require("./utils/pathUtils");
 const { monitorEventLoopDelay } = require('perf_hooks');
 const { default: mongoose } = require('mongoose');
-const {razorpay, WEBHOOK_SECRET} = require('./config/razorpay');
+const { razorpay, WEBHOOK_SECRET } = require('./config/razorpay');
 const crypto = require('crypto');
 const app = express();
 const MONGODB_URI = process.env.MONGODB_URL;
@@ -22,15 +22,28 @@ app.use(express.urlencoded());
 
 app.use(express.static(path.join(rootDir, 'public')))
 
+// Serve React build in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(rootDir, 'client', 'dist')));
+}
+
 app.use(clientRouter);
-const PORT = 3000;
+
+// React client-side routing fallback (production)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(rootDir, 'client', 'dist', 'index.html'));
+  });
+}
+
+const PORT = process.env.PORT || 3000;
 
 mongoose.connect(db_path).then(() => {
-    console.log("Connected to database");
-    app.listen(PORT, () => {
-        console.log('Server is running');
-});
+  console.log("Connected to database");
+  app.listen(PORT, () => {
+    console.log('Server is running');
+  });
 }).catch((err) => {
-    console.log(err);
+  console.log(err);
 })
 

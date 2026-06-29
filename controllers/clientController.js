@@ -338,3 +338,108 @@ exports.download = download;
 exports.paydone = paydone;
 exports.createOrder = createOrder;
 exports.webhookHandler = webhookHandler;
+
+// ─── JSON API routes for React frontend ───────────────────────────────────────
+
+getBookingData = async (req, res) => {
+  const iden = req.query.order_id;
+  let formData;
+  if (iden) {
+    formData = await Data.findOne({ razorpay_order_id: iden });
+  } else {
+    formData = { razorpay_order_id: "", Numoftickets: 0, Name: [], RollNo: [], Email: "", Date: "" };
+  }
+  res.json({ formData });
+};
+
+createOrderApi = async (req, res) => {
+  const existingOrderId = req.body["order_id"];
+
+  if (existingOrderId) {
+    const sData = await Data.findOne({ razorpay_order_id: existingOrderId });
+    if (sData) {
+      sData.Numoftickets = parseInt(req.body["numTickets"], 10);
+      const numTickets = sData.Numoftickets;
+      let names = [], rollNos = [];
+      for (let i = 1; i <= numTickets; i++) {
+        names.push(req.body[`name${i}`]);
+        rollNos.push(req.body[`roll${i}`]);
+      }
+      sData.Name = names;
+      sData.RollNo = rollNos;
+      sData.Email = req.body["email"];
+      let totalAmount = 0;
+      if (numTickets == 1) totalAmount = 300;
+      else if (numTickets == 5) totalAmount = 1200;
+      else if (numTickets == 8) totalAmount = 1680;
+      else if (numTickets == 10) totalAmount = 1800;
+      sData.Date = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }).toString();
+      sData.amount = totalAmount;
+      await sData.save();
+      return res.json({
+        key_id: razorpay.key_id,
+        order_id: sData.razorpay_order_id,
+        amount: sData.amount,
+        Name: sData.Name,
+        RollNo: sData.RollNo,
+        Email: sData.Email,
+        Numoftickets: sData.Numoftickets,
+      });
+    }
+  } else {
+    const email = req.body["email"];
+    const numTickets = parseInt(req.body["numTickets"], 10);
+    let names = [], rollNos = [];
+    for (let i = 1; i <= numTickets; i++) {
+      names.push(req.body[`name${i}`]);
+      rollNos.push(req.body[`roll${i}`]);
+    }
+    const date = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" }).toString();
+    let totalAmount = 0;
+    if (numTickets == 1) totalAmount = 300;
+    else if (numTickets == 5) totalAmount = 1200;
+    else if (numTickets == 8) totalAmount = 1680;
+    else if (numTickets == 10) totalAmount = 1800;
+
+    const rzpOrder = await razorpay.orders.create({
+      amount: totalAmount * 100,
+      currency: "INR",
+      receipt: date,
+    }).catch((err) => { console.log("Razorpay Order Creation Error:", err); });
+
+    if (!rzpOrder) return res.status(500).json({ error: "Failed to create Razorpay order. Please try again." });
+
+    const lData = new Data({
+      status: "pending",
+      razorpay_order_id: rzpOrder.id,
+      amount: totalAmount,
+      Numoftickets: numTickets,
+      Name: names,
+      RollNo: rollNos,
+      Email: email,
+      Date: date,
+    });
+    await lData.save().catch((err) => { console.log(err); });
+
+    return res.json({
+      key_id: razorpay.key_id,
+      order_id: rzpOrder.id,
+      amount: lData.amount,
+      Name: lData.Name,
+      RollNo: lData.RollNo,
+      Email: lData.Email,
+      Numoftickets: lData.Numoftickets,
+    });
+  }
+};
+
+getSuccessData = async (req, res) => {
+  const iden = req.params["order_id"];
+  const order = await Data.findOne({ razorpay_order_id: iden });
+  if (!order) return res.status(404).json({ error: "Order not found" });
+  res.json({ order_id: iden, status: order.status, Name: order.Name, Numoftickets: order.Numoftickets });
+};
+
+exports.getBookingData = getBookingData;
+exports.createOrderApi = createOrderApi;
+exports.getSuccessData = getSuccessData;

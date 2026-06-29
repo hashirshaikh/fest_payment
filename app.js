@@ -31,7 +31,7 @@ app.use(clientRouter);
 
 // React client-side routing fallback (production)
 if (process.env.NODE_ENV === 'production') {
-  app.get('*', (req, res) => {
+  app.get(/.*/, (req, res) => {
     res.sendFile(path.join(rootDir, 'client', 'dist', 'index.html'));
   });
 }

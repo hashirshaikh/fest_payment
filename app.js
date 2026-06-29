@@ -27,6 +27,19 @@ app.use(express.static(path.join(rootDir, 'public')))
 const reactBuildPath = path.join(rootDir, 'client', 'dist');
 const hasReactBuild = fs.existsSync(reactBuildPath);
 
+console.log("=== DEPLOYMENT DIAGNOSTICS ===");
+console.log("rootDir:", rootDir);
+console.log("reactBuildPath:", reactBuildPath);
+console.log("hasReactBuild:", hasReactBuild);
+if (hasReactBuild) {
+  try {
+    console.log("Build files found:", fs.readdirSync(reactBuildPath));
+  } catch (err) {
+    console.error("Error reading build dir:", err.message);
+  }
+}
+console.log("==============================");
+
 if (hasReactBuild) {
   app.use(express.static(reactBuildPath));
 }
